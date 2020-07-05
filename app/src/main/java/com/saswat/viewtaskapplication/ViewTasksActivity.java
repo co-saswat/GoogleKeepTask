@@ -1,14 +1,14 @@
 package com.saswat.viewtaskapplication;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 
@@ -64,7 +64,13 @@ public class ViewTasksActivity extends AppCompatActivity implements TaskAdapter.
         updateTask.task_name = task.task_name;
         updateTask.task_items = itemArrayValue;
 
-        dbHelper.updateTasks(dbHelper.getWritableDatabase(),updateTask);
+        dbHelper.updateTasks(dbHelper.getWritableDatabase(), updateTask);
+        getDataFromDatabase();
+    }
+
+    @Override
+    public void onTaskDelete(Task task) {
+        dbHelper.deleteTasks(dbHelper.getWritableDatabase(), task);
         getDataFromDatabase();
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,22 +46,45 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
             View view = LayoutInflater.from(context).inflate(R.layout.cell_task_view,null);
             TextView mTvTitle = view.findViewById(R.id.tv_items_display);
             CheckBox mChkBoxItems = view.findViewById(R.id.chk_view);
-            if(taskItems1.itemIsCompleted){
+            if(taskItems1.itemIsCompleted) {
+//                if (mChkBoxItems.isChecked()){
+//                    mChkBoxItems.setChecked(false);
+////                    mChkBoxItems.setFocusable(false);
+////                    mChkBoxItems.setFocusableInTouchMode(false);
+//                    mTvTitle.setPaintFlags(mTvTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+//                }else{
                 mChkBoxItems.setChecked(true);
                 mChkBoxItems.setFocusable(false);
                 mChkBoxItems.setFocusableInTouchMode(false);
-                mTvTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                mTvTitle.setPaintFlags(mTvTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//                }
+
+//                if (mTvTitle.getPaint().isStrikeThruText()){
+//                    mChkBoxItems.setChecked(false);
+//                    mChkBoxItems.setFocusable(false);
+//                    mChkBoxItems.setFocusableInTouchMode(true);
+//                    mTvTitle.setPaintFlags(mTvTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+//                }
             }
+
             mTvTitle.setText(taskItems1.items_name);
             mChkBoxItems.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if(b){
-                        listener.onTaskUpdate(taskItems1 , item);
+                    if (b) {
+                        listener.onTaskUpdate(taskItems1, item);
                     }
                 }
             });
             holder.mllDynamicView.addView(view);
+            holder.mRLDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        listener.onTaskDelete(item);
+                    }
+                }
+            });
         }
     }
 
@@ -69,17 +93,22 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
         return tasks.size();
     }
 
-    static class TaskHolder extends RecyclerView.ViewHolder{
+    public interface TaskUpdateListener {
+        void onTaskUpdate(TaskItems item, Task task);
+
+        void onTaskDelete(Task task);
+    }
+
+    static class TaskHolder extends RecyclerView.ViewHolder {
         private TextView mTvTaskTitle;
         private LinearLayout mllDynamicView;
+        private RelativeLayout mRLDelete;
+
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             mTvTaskTitle = itemView.findViewById(R.id.tv_task_title);
             mllDynamicView = itemView.findViewById(R.id.ll_dynamic_view);
+            mRLDelete = itemView.findViewById(R.id.rl_view_delete);
         }
-    }
-
-    public interface TaskUpdateListener{
-        void onTaskUpdate(TaskItems item , Task task);
     }
 }
